@@ -1,0 +1,110 @@
+import { Router, Request, Response } from 'express';
+import { v4 as uuidv4 } from 'crypto';
+import db from '../db.js';
+import { hashPassword, verifyPassword } from '../utils/hash.js';
+import { generateToken } from '../middleware/auth.js';
+
+const router = Router();
+
+/**
+ * POST /api/auth/register
+ */
+router.post('/register', async (req: Request, res: Response) => {
+  try {
+    const { name, email, phone, password } = req.body;
+
+    if (!name || !email || !phone || !password) {
+      res.status(400).json({ error: 'Tous les champs sont requis (nom, email, téléphone, mot de passe).' });
+      return;
+    }
+
+    if (password.length < 6) {
+      res.status(400).json({ error: 'Le mot de passe doit contenir au moins 6 caractères.' });
+      return;
+    }
+
+    // Check if email already exists
+    const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    if (existing) {
+      res.status(409).json({ error: 'Un compte avec cet email existe déjà.' });
+      return;
+    }
+
+    const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const passwordHash = await hashPassword(password);
+
+    db.prepare(`
+      INSERT INTO users (id, name, email, phone, password_hash, role)
+      VALUES (?, ?, ?, ?, ?, 'client')
+    `).run(id, name.trim(), email.trim().toLowerCase(), phone.trim(), passwordHash);
+
+    const user = db.prepare('SELECT id, name, email, phone, role, avatar, created_at FROM users WHERE id = ?').get(id) as any;
+
+    const token = generateToken({ userId: id, email: user.email, role: user.role });
+
+    res.status(201).json({ user, token });
+  } catch (err: any) {
+    console.error('Register error:', err);
+    res.status(500).json({ error: 'Erreur lors de la création du compte.' });
+  }
+});
+
+/**
+ * POST /api/auth/login
+ */
+router.post('/login', async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400).json({ error: 'Email et mot de passe requis.' });
+      return;
+    }
+
+    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.trim().toLowerCase()) as any;
+    if (!user) {
+      res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
+      return;
+    }
+
+    const isValid = await verifyPassword(password, user.password_hash);
+    if (!isValid) {
+      res.status(401).json({ error: 'Email ou mot de passe incorrect.' });
+      return;
+    }
+
+    const token = generateToken({ userId: user.id, email: user.email, role: user.role });
+
+    // Don't send password_hash to client
+    const { password_hash, ...safeUser } = user;
+    res.json({ user: safeUser, token });
+  } catch (err: any) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Erreur lors de la connexion.' });
+  }
+});
+
+/**
+ * GET /api/auth/me — Get current user profile
+ */
+router.get('/me', async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Non authentifié.' });
+      return;
+    }
+
+    const user = db.prepare('SELECT id, name, email, phone, role, avatar, created_at FROM users WHERE id = ?').get(req.user.userId) as any;
+    if (!user) {
+      res.status(404).json({ error: 'Utilisateur introuvable.' });
+      return;
+    }
+
+    res.json({ user });
+  } catch (err: any) {
+    console.error('Get profile error:', err);
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
+export default router;

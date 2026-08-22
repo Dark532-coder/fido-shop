@@ -1,0 +1,6 @@
+{
+  "name": "Fido's Shop",
+  "description": "Boutique en ligne Fido's Shop avec paiements sécurisés T-Money (Yass) et Moov Flooz au Togo, gestion multi-photos et suivi des commandes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
