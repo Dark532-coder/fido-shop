@@ -1,4 +1,4 @@
-# Fido's Shop
+# 🛍️ Fido's Shop
 
 Boutique e-commerce au Togo — Paiement sécurisé T-Money (Yass) & Moov Flooz.
 
@@ -29,7 +29,7 @@ npm start            # Build + serveur (port 3001)
 ## Compte administrateur par défaut
 
 - **Email** : admin@fido.tg
-- **Mot de passe** : Admin2026!
+- **Mot de passe** : admin123
 
 ## Variables d'environnement
 
@@ -45,12 +45,29 @@ Copiez `.env.example` en `.env` et renseignez vos clés :
 | `PAYDUNYA_TOKEN` | Token PayDunya |
 | `PAYDUNYA_MODE` | `test` ou `live` |
 
-## Déploiement
+## 🚀 Déploiement gratuit — Render.com
 
-### Railway (recommandé)
+### Méthode 1 : Déploiement en 1 clic
 
-1. Connectez votre dépôt GitHub à [Railway](https://railway.app)
-2. Railway détecte automatiquement le `Procfile`
-3. Ajoutez les variables d'environnement dans le dashboard
-4. Le site sera accessible sur `https://votre-app.up.railway.app`
-"# fido-shop" 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+### Méthode 2 : Manuel
+
+1. Créez un compte gratuit sur [render.com](https://render.com)
+2. Cliquez **"New +"** → **"Web Service"**
+3. Connectez votre dépôt GitHub
+4. Remplissez les champs :
+   - **Build Command** : `npm install && npm run seed && npm run build`
+   - **Start Command** : `npm run server`
+   - **Plan** : **Free**
+5. Ajoutez la variable d'environnement :
+   - `JWT_SECRET` = *(une chaîne aléatoire longue)*
+6. Cliquez **"Create Web Service"**
+
+Votre site sera accessible sur `https://fido-shop-xxxx.onrender.com` 🎉
+
+> **Note** : Sur le plan gratuit, l'app s'endort après 15 min d'inactivité et met ~30s à se réveiller au prochain visiteur.
+
+## Licence
+
+MIT

@@ -1,0 +1,26 @@
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: fido-shop
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run seed && npm run build
+    startCommand: npm run server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PAYDUNYA_MODE
+        value: test
+      - key: PAYDUNYA_MASTER_KEY
+        sync: false
+      - key: PAYDUNYA_PRIVATE_KEY
+        sync: false
+      - key: PAYDUNYA_PUBLIC_KEY
+        sync: false
+      - key: PAYDUNYA_TOKEN
+        sync: false

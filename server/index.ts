@@ -25,7 +25,9 @@ const PORT = parseInt(process.env.PORT || '3001', 10);
 // Middleware
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' 
+    ? true  // Same-origin: frontend served by this server
+    : (process.env.FRONTEND_URL || 'http://localhost:3000'),
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
