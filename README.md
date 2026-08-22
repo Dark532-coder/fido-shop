@@ -53,3 +53,4 @@ Copiez `.env.example` en `.env` et renseignez vos clés :
 2. Railway détecte automatiquement le `Procfile`
 3. Ajoutez les variables d'environnement dans le dashboard
 4. Le site sera accessible sur `https://votre-app.up.railway.app`
+"# fido-shop" 
