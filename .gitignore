@@ -5,7 +5,7 @@ node_modules/
 dist/
 
 # Database (will be created at runtime)
-data/
+/data/
 
 # Environment
 .env
