@@ -206,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               className="w-full text-left px-3 py-2 text-xs font-medium text-onyx-200 hover:bg-onyx-800 rounded-xl flex items-center gap-2 transition-colors"
                             >
                               <Smartphone className="w-4 h-4 text-onyx-400" />
-                              Transactions Mixx by Yas & Fozz
+                              Transactions Mixx by Yas & Flooz
                             </button>
                           </div>
                           <div className="border-t border-onyx-700 my-1" />

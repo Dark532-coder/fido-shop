@@ -314,7 +314,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         timeline: [
           {
             status: 'paye',
-            label: `Paiement ${paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'} validé`,
+            label: `Paiement ${paymentMethod === 'yass' ? 'Mixx by Yas' : 'Flooz'} validé`,
             timestamp,
             note: `Transaction ${operatorRef} approuvée avec authentification forte 2FA.`,
           },
@@ -394,7 +394,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div>
                 <h2 className="text-base font-bold text-white">Caisse Sécurisée</h2>
                 <p className="text-[11px] text-slate-300">
-                  Protocole Mobile Money Mixx by Yas & Fozz Togo
+                  Protocole Mobile Money Mixx by Yas & Flooz Togo
                 </p>
               </div>
             </div>
@@ -615,7 +615,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-600 mt-0.5">
-                        Paiement direct par Push USSD ou code OTP SMS sur votre ligne Yas Togo Telecom.
+                        En production, la validation est effectuée par le moyen de paiement sélectionné.
                       </p>
                     </div>
                   </div>
@@ -627,7 +627,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               </div>
 
-              {/* Fozz Option */}
+              {/* Flooz Option */}
               <div
                 onClick={() => setPaymentMethod('flooz')}
                 className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -639,12 +639,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-blue-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
-                      FOZZ
+                      FLOOZ
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="text-xs font-extrabold text-slate-900">
-                          Fozz
+                          Flooz
                         </h4>
                         <span className="bg-blue-500/20 text-blue-900 text-[10px] font-bold px-1.5 py-0.5 rounded border border-blue-500/30">
                           *155#
@@ -666,7 +666,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {/* Phone number input for Mobile Money */}
               <div className="pt-2">
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Numéro de compte {paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'} à débiter *
+                    Numéro de compte {paymentMethod === 'yass' ? 'Mixx by Yas' : 'Flooz'} à débiter *
                 </label>
                 <div className="relative">
                   <Smartphone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -680,10 +680,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   />
                 </div>
                 <span className="text-[10px] text-slate-500 mt-1 block">
-                  Réseau détecté : <strong>{getMobileMoneyLabel(payerPhone)}</strong> (Mixx by Yas : 90-93 et 70-73, Fozz : 96-99 et 79)
+                  Réseau détecté : <strong>{getMobileMoneyLabel(payerPhone)}</strong> (Mixx by Yas : 90-93 et 70-73, Flooz : 96-99 et 79)
                 </span>
                 <span className="text-[10px] text-slate-500 mt-1 block">
-                  Une notification de validation sera envoyée sur ce numéro pour autoriser le prélèvement de {formatFCFA(total)}.
+                  En mode simulation, aucun SMS n’est envoyé : un code de test sera affiché à l’étape suivante.
                 </span>
               </div>
 
@@ -723,7 +723,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 font-bold text-amber-900">
                     <ShieldCheck className="w-4 h-4 text-amber-700" />
-                    Demande d'autorisation {paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'}
+                    Demande d'autorisation {paymentMethod === 'yass' ? 'Mixx by Yas' : 'Flooz'}
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-mono text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded-md font-bold">
                     <Clock className="w-3 h-3" />
@@ -732,9 +732,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
 
                 <p className="text-slate-700 text-xs leading-relaxed">
-                  Une requête sécurisée a été envoyée sur le mobile{' '}
+                  Validation de démonstration pour le mobile{' '}
                   <strong className="font-mono text-slate-900">{formatPhoneNumber(payerPhone)}</strong>.
-                  Consultez votre téléphone ou validez avec le code de sécurité 2FA ci-dessous.
+                  Utilisez le code de test affiché ci-dessous. Pour un vrai paiement, configurez les clés PayDunya sur Render.
                 </p>
 
                 {/* Simulated USSD Prompt Box */}
@@ -746,7 +746,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     Débiter {formatFCFA(total)} pour Fido's Shop ?
                   </div>
                   <div className="text-emerald-400">
-                    Code OTP de validation chiffré : <span className="bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300 font-bold tracking-widest">{generatedOtp}</span>
+                    Code de test (aucun SMS en mode simulation) : <span className="bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300 font-bold tracking-widest">{generatedOtp}</span>
                   </div>
                 </div>
               </div>
@@ -827,7 +827,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex justify-between border-b border-slate-200 pb-2">
                   <span className="text-slate-500">Mode de Paiement :</span>
                   <span className="font-semibold text-slate-900">
-                    {createdTransaction.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'}
+                    {createdTransaction.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Flooz'}
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200 pb-2">

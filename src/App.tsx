@@ -341,7 +341,7 @@ export default function App() {
                   : CATEGORIES.find((c) => c.id === selectedCategory)?.name || 'Articles'}
               </h1>
               <p className="text-xs text-onyx-500 mt-0.5">
-                Paiement instantané par Mixx by Yas & Fozz avec validation SMS
+                Paiement instantané par Mixx by Yas & Flooz avec validation SMS
               </p>
             </div>
           </div>

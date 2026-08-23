@@ -311,7 +311,7 @@ export const ClientDashboard: React.FC<ClientDashboardProps> = ({
                   Double Authentification (2FA) Activée
                 </div>
                 <p className="text-xs text-emerald-800 leading-relaxed">
-                  Chaque connexion et chaque transaction Mobile Money (Mixx by Yas ou Fozz) requiert une validation par code de sécurité à usage unique (OTP).
+                  Chaque connexion et chaque transaction Mobile Money (Mixx by Yas ou Flooz) requiert une validation par code de sécurité à usage unique (OTP).
                 </p>
               </div>
 

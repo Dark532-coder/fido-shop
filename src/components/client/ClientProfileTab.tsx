@@ -65,7 +65,7 @@ export const ClientProfileTab: React.FC<ClientProfileTabProps> = ({
 
       <div>
         <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Téléphone Mobile Money (Mixx by Yas ou Fozz)
+            Téléphone Mobile Money (Mixx by Yas ou Flooz)
         </label>
         <input
           type="tel"
@@ -103,7 +103,7 @@ export const ClientProfileTab: React.FC<ClientProfileTabProps> = ({
             }`}
           >
             <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-            Fozz
+            Flooz
           </button>
         </div>
       </div>

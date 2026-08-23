@@ -90,7 +90,7 @@ export const TransactionReceiptModal: React.FC<TransactionReceiptModalProps> = (
               Fido's Shop
             </h2>
             <p className="text-[11px] text-slate-500">
-              Paiement Sécurisé Mobile Money (Mixx by Yas / Fozz)
+              Paiement Sécurisé Mobile Money (Mixx by Yas / Flooz)
             </p>
             <p className="text-[10px] text-slate-400 font-mono mt-0.5">
               Agrément Établissement Financier UEMOA / Togo
@@ -128,7 +128,7 @@ export const TransactionReceiptModal: React.FC<TransactionReceiptModalProps> = (
             <div>
               <span className="text-slate-400 block">Moyen de Paiement</span>
               <strong className="text-slate-900">
-                {transaction.paymentMethod === 'yass' ? 'Mixx by Yas Togo' : 'Fozz'}
+                {transaction.paymentMethod === 'yass' ? 'Mixx by Yas Togo' : 'Flooz'}
               </strong>
             </div>
             <div>

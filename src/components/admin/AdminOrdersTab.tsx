@@ -49,7 +49,7 @@ export const AdminOrdersTab: React.FC<AdminOrdersTabProps> = ({
           <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto mb-2" />
           <h4 className="text-xs font-bold text-slate-800">Aucune commande pour le moment</h4>
           <p className="text-xs text-slate-500 mt-1">
-            Les commandes passées par vos clients via Mixx by Yas ou Fozz apparaîtront ici.
+            Les commandes passées par vos clients via Mixx by Yas ou Flooz apparaîtront ici.
           </p>
         </div>
       ) : (
@@ -106,7 +106,7 @@ export const AdminOrdersTab: React.FC<AdminOrdersTabProps> = ({
                         <p><strong>Lieu :</strong> {order.shippingAddress.district}, {order.shippingAddress.city}</p>
                         <p><strong>Détails :</strong> {order.shippingAddress.addressDetails}</p>
                         <p>
-                          <strong>Mode :</strong> {order.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'}
+                          <strong>Mode :</strong> {order.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Flooz'}
                           <span className="font-mono font-bold text-slate-800 ml-1">({order.operatorRef})</span>
                         </p>
                       </div>

@@ -46,13 +46,13 @@ export const AdminStatsTab: React.FC<AdminStatsTabProps> = ({
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block mb-1">
-            Volume Fozz
+            Volume Flooz
           </span>
           <div className="text-xl font-bold text-slate-900">
             {formatFCFA(totalFloozRevenue)}
           </div>
           <span className="text-[11px] text-blue-600 font-semibold mt-1 block">
-            Réseau Fozz (*155#)
+            Réseau Flooz (*155#)
           </span>
         </div>
 
@@ -92,7 +92,7 @@ export const AdminStatsTab: React.FC<AdminStatsTabProps> = ({
 
           <div>
             <div className="flex justify-between text-xs font-semibold mb-1">
-              <span>Fozz</span>
+              <span>Flooz</span>
               <span>
                 {totalRevenue > 0 ? Math.round((totalFloozRevenue / totalRevenue) * 100) : 50}% ({formatFCFA(totalFloozRevenue)})
               </span>

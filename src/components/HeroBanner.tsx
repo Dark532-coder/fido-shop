@@ -54,7 +54,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onDiscoverClick, onAuthC
             className="text-onyx-400 text-sm sm:text-base max-w-md leading-relaxed mb-8"
           >
             Des articles sélectionnés avec soin, payables instantanément par
-            Mixx by Yas ou Fozz, avec validation 2FA à chaque commande.
+            Mixx by Yas ou Flooz, avec validation 2FA à chaque commande.
           </motion.p>
 
           <motion.div
@@ -104,7 +104,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onDiscoverClick, onAuthC
             <span className="hidden sm:block w-px h-4 bg-onyx-700" />
             <span className="flex items-center gap-1.5">
               <Smartphone className="w-4 h-4 text-gold-400" />
-              Mixx by Yas & Fozz
+              Mixx by Yas & Flooz
             </span>
           </motion.div>
         </div>

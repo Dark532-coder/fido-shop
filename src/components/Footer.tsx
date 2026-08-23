@@ -7,7 +7,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenAdminAuth }) => {
   const items = [
-    { icon: Smartphone, title: 'Mixx by Yas & Fozz', desc: 'Paiements directs Togo' },
+    { icon: Smartphone, title: 'Mixx by Yas & Flooz', desc: 'Paiements directs Togo' },
     { icon: ShieldCheck, title: 'Sécurité 2FA', desc: 'Validation SMS cryptée' },
     { icon: Truck, title: 'Livraison Rapide', desc: 'Lomé et tout le Togo' },
     { icon: Headphones, title: 'Support 7j/7', desc: 'Assistance WhatsApp' },

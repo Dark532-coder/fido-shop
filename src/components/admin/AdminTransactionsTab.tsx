@@ -24,7 +24,7 @@ export const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({
             Registre Général des Transactions Mobile Money
           </h3>
           <p className="text-[11px] text-slate-500">
-            Audit cryptographique des règlements Mixx by Yas et Fozz
+            Audit cryptographique des règlements Mixx by Yas et Flooz
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({
           <Smartphone className="w-12 h-12 text-slate-300 mx-auto mb-2" />
           <h4 className="text-xs font-bold text-slate-800">Aucune transaction enregistrée</h4>
           <p className="text-xs text-slate-500 mt-1">
-            Toutes les transactions effectuées via Mixx by Yas ou Fozz seront répertoriées avec leur empreinte SHA-256.
+            Toutes les transactions effectuées via Mixx by Yas ou Flooz seront répertoriées avec leur empreinte SHA-256.
           </p>
         </div>
       ) : (
@@ -76,7 +76,7 @@ export const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({
                           </span>
                         ) : (
                           <span className="bg-blue-100 text-blue-900 font-bold px-2 py-0.5 rounded text-[10px]">
-                            FOZZ
+                            FLOOZ
                           </span>
                         )}
                       </td>

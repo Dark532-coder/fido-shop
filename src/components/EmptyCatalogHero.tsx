@@ -58,7 +58,7 @@ export const EmptyCatalogHero: React.FC<EmptyCatalogProps> = ({
       </div>
 
       <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-7 pt-6 border-t border-onyx-800 text-[11px] text-onyx-500">
-        <span className="flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-gold-500" /> Mixx by Yas & Fozz</span>
+        <span className="flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5 text-gold-500" /> Mixx by Yas & Flooz</span>
         <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-gold-500" /> Multi-photos</span>
         <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-gold-500" /> Sécurité 2FA</span>
       </div>

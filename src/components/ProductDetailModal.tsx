@@ -174,7 +174,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <div className="mt-6 pt-4 border-t border-slate-200/60 grid grid-cols-2 gap-2 text-xs">
               <div className="flex items-center gap-2 text-slate-700 bg-white/80 p-2 rounded-xl border border-slate-200/60">
                 <Smartphone className="w-4 h-4 text-amber-600 shrink-0" />
-                <span className="text-[11px] font-semibold">Mixx by Yas & Fozz</span>
+                <span className="text-[11px] font-semibold">Mixx by Yas & Flooz</span>
               </div>
               <div className="flex items-center gap-2 text-slate-700 bg-white/80 p-2 rounded-xl border border-slate-200/60">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -302,7 +302,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       <span>Expédition express à Lomé & Régions du Togo</span>
                     </div>
                     <p className="text-[11px] text-slate-600 leading-normal pl-6">
-                      Commande livrée en 24h à 48h. Règlement 100% sécurisé à l'initiation par Push USSD Mixx by Yas (*145#) ou Fozz (*155#).
+                      Commande livrée en 24h à 48h. Règlement 100% sécurisé à l'initiation par Push USSD Mixx by Yas (*145#) ou Flooz (*155#).
                     </p>
                   </div>
                 </div>

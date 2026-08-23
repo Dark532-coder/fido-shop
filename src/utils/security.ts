@@ -58,7 +58,7 @@ export function getMobileMoneyOperator(phone: string): MobileMoneyOperator {
 export function getMobileMoneyLabel(phone: string): string {
   const operator = getMobileMoneyOperator(phone);
   if (operator === 'mixx') return 'Mixx by Yas';
-  if (operator === 'flooz') return 'Fozz';
+  if (operator === 'flooz') return 'Flooz';
   return 'Réseau non reconnu';
 }
 

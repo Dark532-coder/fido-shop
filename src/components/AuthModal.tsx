@@ -241,7 +241,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
               <p className="text-xs text-slate-300">
                 {step === 'otp'
                   ? 'Validation par code de sécurité mobile'
-                  : 'Accédez à vos commandes et transactions Mixx by Yas & Fozz'}
+                  : 'Accédez à vos commandes et transactions Mixx by Yas & Flooz'}
               </p>
             </div>
           </div>
@@ -383,7 +383,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                 {mode === 'register' && (
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Numéro Téléphone (Mixx by Yas ou Fozz)
+                      Numéro Téléphone (Mixx by Yas ou Flooz)
                     </label>
                     <div className="relative">
                       <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -449,7 +449,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                         }`}
                       >
                         <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                        Fozz
+                        Flooz
                       </button>
                     </div>
                   </div>
