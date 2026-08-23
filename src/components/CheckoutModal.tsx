@@ -11,7 +11,6 @@ import {
   Clock, 
   Receipt, 
   Printer, 
-  KeyRound, 
   Check, 
   Building, 
   MapPin, 
@@ -80,8 +79,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   // Step 3: Mobile Money Strong Authentication
   const [payerPhone, setPayerPhone] = useState(currentUser?.phone || '');
-  const [otpCode, setOtpCode] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState('');
   const [ussdTimer, setUssdTimer] = useState(90);
   const [isProcessingPush, setIsProcessingPush] = useState(false);
   const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
@@ -123,8 +120,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(1);
-      setOtpCode('');
-      setGeneratedOtp('');
       setIsPaymentConfirmed(false);
       setIsProcessingPush(false);
       setUssdTimer(90);
@@ -178,9 +173,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }
 
     setIsProcessingPush(true);
-    // Generate authentic OTP
-    const mockOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedOtp(mockOtp);
     setUssdTimer(90);
 
     setTimeout(() => {
@@ -192,16 +184,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const handleFinalizePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!otpCode.trim()) {
-      setError('Veuillez entrer le code de validation à 6 chiffres.');
-      return;
-    }
-
-    if (otpCode.trim() !== generatedOtp) {
-      setError('Code de validation incorrect. Veuillez vérifier le code reçu ou utiliser le code test.');
-      return;
-    }
 
     setIsPaymentConfirmed(true);
 
@@ -716,7 +698,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
           )}
 
-          {/* ================= STEP 3: STRONG AUTHENTICATION & OTP / USSD ================= */}
+          {/* ================= STEP 3: PUSH / USSD CONFIRMATION ================= */}
           {currentStep === 3 && (
             <form onSubmit={handleFinalizePayment} className="space-y-4">
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/40 text-xs">
@@ -732,9 +714,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
 
                 <p className="text-slate-700 text-xs leading-relaxed">
-                  Validation de démonstration pour le mobile{' '}
+                  Cette étape représente la demande de validation Push/USSD pour le mobile{' '}
                   <strong className="font-mono text-slate-900">{formatPhoneNumber(payerPhone)}</strong>.
-                  Utilisez le code de test affiché ci-dessous. Pour un vrai paiement, configurez les clés PayDunya sur Render.
+                  En production, ouvrez la notification reçue et validez le paiement avec votre PIN Mobile Money.
                 </p>
 
                 {/* Simulated USSD Prompt Box */}
@@ -745,28 +727,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <div className="text-white font-bold">
                     Débiter {formatFCFA(total)} pour Fido's Shop ?
                   </div>
-                  <div className="text-emerald-400">
-                    Code de test (aucun SMS en mode simulation) : <span className="bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300 font-bold tracking-widest">{generatedOtp}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Saisissez votre Code de Sécurité / PIN Mobile Money
-                </label>
-                <div className="relative">
-                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    maxLength={6}
-                    required
-                    value={otpCode}
-                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                    placeholder={`Ex: ${generatedOtp}`}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center font-mono text-lg font-bold tracking-widest text-slate-900 focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-hidden"
-                    autoFocus
-                  />
+                  <div className="text-emerald-400">Mode simulation : confirmez ci-dessous pour continuer.</div>
                 </div>
               </div>
 
@@ -796,7 +757,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Confirmer le Paiement ({formatFCFA(total)})</span>
+                  <span>J’ai validé la notification ({formatFCFA(total)})</span>
                 </button>
               </div>
             </form>
