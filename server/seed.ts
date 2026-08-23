@@ -16,16 +16,21 @@ async function seed() {
   }
 
   // Create admin user
-  const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
+  const existingAdmin = db.prepare('SELECT id FROM users WHERE role = \'admin\' ORDER BY created_at LIMIT 1').get() as { id: string } | undefined;
+  const hash = await hashPassword(adminPassword);
   if (!existingAdmin) {
-    const hash = await hashPassword(adminPassword);
     db.prepare(`
       INSERT INTO users (id, name, email, phone, password_hash, role)
       VALUES (?, ?, ?, ?, ?, 'admin')
     `).run('user-admin-001', 'Administrateur Fido', adminEmail, '90000000', hash);
     console.log(`  ✅ Admin créé : ${adminEmail}`);
   } else {
-    console.log('  ⏭️  Admin existe déjà.');
+    db.prepare(`
+      UPDATE users
+      SET email = ?, password_hash = ?, role = 'admin', updated_at = datetime('now')
+      WHERE id = ?
+    `).run(adminEmail, hash, existingAdmin.id);
+    console.log(`  ✅ Identifiants admin synchronisés : ${adminEmail}`);
   }
 
   // Create sample products
