@@ -1,13 +1,13 @@
 # 🛍️ Fido's Shop
 
-Boutique e-commerce au Togo — Paiement sécurisé Mixx by Yas & Fozz.
+Boutique e-commerce au Togo — Paiement sécurisé Mixx by Yas & Flooz.
 
 ## Stack
 
 - **Frontend** : React 19 + Vite + Tailwind CSS 4
 - **Backend** : Express.js + SQLite (better-sqlite3)
 - **Auth** : JWT + bcrypt
-- **Paiements** : PayDunya (Mixx by Yas & Fozz)
+- **Paiements** : PayDunya (Mixx by Yas & Flooz)
 
 ## Démarrage rapide
 

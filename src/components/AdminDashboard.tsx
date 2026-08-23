@@ -312,7 +312,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const headers = ['Ref_Operateur', 'Methode', 'Client', 'Numero_Debite', 'Montant_FCFA', 'Date', 'Statut', 'Signature_Hash'];
     const rows = transactions.map((t) => [
       t.operatorRef,
-      t.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz',
+      t.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Flooz',
       `"${t.userName}"`,
       t.payerPhone,
       t.amount,
@@ -360,7 +360,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold text-white">Tableau de Bord Administrateur</h2>
                 <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-mono border border-amber-500/30">
-                  Fido's Shop - Mixx by Yas & Fozz
+                  Fido's Shop - Mixx by Yas & Flooz
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -438,7 +438,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             }`}
           >
             <Smartphone className="w-4 h-4" />
-            <span>Journal Paiements Mixx by Yas & Fozz ({transactions.length})</span>
+            <span>Journal Paiements Mixx by Yas & Flooz ({transactions.length})</span>
           </button>
 
           <button
