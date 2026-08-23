@@ -77,6 +77,19 @@ export async function apiGetProfile(): Promise<{ user: any }> {
   return apiRequest<{ user: any }>('/auth/me');
 }
 
+export async function apiUpdateAdminCredentials(data: {
+  currentPassword: string;
+  email: string;
+  newPassword?: string;
+}): Promise<{ user: any; token: string }> {
+  const result = await apiRequest<{ user: any; token: string }>('/auth/admin-credentials', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+  setAuthToken(result.token);
+  return result;
+}
+
 export function apiLogout() {
   setAuthToken(null);
   localStorage.removeItem('fido_current_user');

@@ -30,7 +30,7 @@ export const ClientTransactionsTab: React.FC<ClientTransactionsTabProps> = ({
           <Smartphone className="w-12 h-12 text-slate-300 mx-auto mb-2" />
           <h4 className="text-xs font-bold text-slate-800">Aucune transaction trouvée</h4>
           <p className="text-xs text-slate-500 mt-1">
-            Vos reçus de paiement T-Money (Yass) et Moov Flooz seront archivés ici.
+              Vos reçus de paiement Mixx by Yas et Fozz seront archivés ici.
           </p>
         </div>
       ) : (
@@ -56,11 +56,11 @@ export const ClientTransactionsTab: React.FC<ClientTransactionsTabProps> = ({
                     <td className="p-3">
                       {trx.paymentMethod === 'yass' ? (
                         <span className="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded text-[10px]">
-                          T-MONEY (YASS)
+                          MIXX BY YAS
                         </span>
                       ) : (
                         <span className="bg-blue-100 text-blue-900 font-bold px-2 py-0.5 rounded text-[10px]">
-                          MOOV FLOOZ
+                          FOZZ
                         </span>
                       )}
                     </td>

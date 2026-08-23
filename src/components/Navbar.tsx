@@ -11,6 +11,8 @@ import {
   LogOut,
   Menu,
   X,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { User } from '../types';
 
@@ -27,6 +29,8 @@ interface NavbarProps {
   selectedCategory: string;
   onSelectCategory: (cat: string) => void;
   onNewProductClick?: () => void;
+  isLightTheme: boolean;
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -42,6 +46,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   selectedCategory,
   onSelectCategory,
   onNewProductClick,
+  isLightTheme,
+  onToggleTheme,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -98,6 +104,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              aria-label={isLightTheme ? 'Activer le thème sombre' : 'Activer le thème clair'}
+              title={isLightTheme ? 'Thème sombre' : 'Thème clair'}
+              className="p-2 rounded-xl text-onyx-300 hover:bg-onyx-800 hover:text-gold-300 transition-colors"
+            >
+              {isLightTheme ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            </button>
             
             {currentUser?.role === 'admin' && (
               <motion.button
@@ -191,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               className="w-full text-left px-3 py-2 text-xs font-medium text-onyx-200 hover:bg-onyx-800 rounded-xl flex items-center gap-2 transition-colors"
                             >
                               <Smartphone className="w-4 h-4 text-onyx-400" />
-                              Transactions Yass & Flooz
+                              Transactions Mixx by Yas & Fozz
                             </button>
                           </div>
                           <div className="border-t border-onyx-700 my-1" />

@@ -27,6 +27,31 @@
   --color-onyx-950: #08080A;
 }
 
+/* The app uses the onyx palette throughout; remap those utilities for the optional light theme. */
+.theme-light,
+.theme-light.bg-onyx-950 {
+  color: #17171a;
+  background-color: #f5f5f6;
+}
+
+.theme-light .bg-onyx-950 { background-color: #f5f5f6; }
+.theme-light .bg-onyx-900 { background-color: #ffffff; }
+.theme-light .bg-onyx-800 { background-color: #e6e6e8; }
+.theme-light .bg-onyx-700 { background-color: #d7d7db; }
+.theme-light .text-onyx-50 { color: #17171a; }
+.theme-light .text-onyx-100 { color: #2e2e33; }
+.theme-light .text-onyx-200 { color: #45454c; }
+.theme-light .text-onyx-300 { color: #5c5c64; }
+.theme-light .text-onyx-400,
+.theme-light .text-onyx-500 { color: #6c6c74; }
+.theme-light .text-onyx-600,
+.theme-light .text-onyx-700 { color: #98989f; }
+.theme-light .border-onyx-700,
+.theme-light .border-onyx-800 { border-color: #d7d7db; }
+.theme-light .shadow-black\/20,
+.theme-light .shadow-black\/40,
+.theme-light .shadow-black\/60 { --tw-shadow-color: rgb(0 0 0 / 0.1); }
+
 @media print {
   body {
     background: white !important;

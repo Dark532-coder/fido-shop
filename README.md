@@ -1,13 +1,13 @@
 # 🛍️ Fido's Shop
 
-Boutique e-commerce au Togo — Paiement sécurisé T-Money (Yass) & Moov Flooz.
+Boutique e-commerce au Togo — Paiement sécurisé Mixx by Yas & Fozz.
 
 ## Stack
 
 - **Frontend** : React 19 + Vite + Tailwind CSS 4
 - **Backend** : Express.js + SQLite (better-sqlite3)
 - **Auth** : JWT + bcrypt
-- **Paiements** : PayDunya (T-Money & Flooz)
+- **Paiements** : PayDunya (Mixx by Yas & Fozz)
 
 ## Démarrage rapide
 
@@ -15,7 +15,8 @@ Boutique e-commerce au Togo — Paiement sécurisé T-Money (Yass) & Moov Flooz.
 # Installer les dépendances
 npm install
 
-# Créer la base de données et les données de test
+# Créer la base de données et le compte administrateur
+# Configurez d'abord ADMIN_EMAIL et ADMIN_PASSWORD dans .env
 npm run seed
 
 # Développement (2 terminaux)
@@ -26,10 +27,11 @@ npm run server:dev   # Backend (port 3001)
 npm start            # Build + serveur (port 3001)
 ```
 
-## Compte administrateur par défaut
+## Connexion administrateur
 
-- **Email** : admin@fido.tg
-- **Mot de passe** : admin123
+Le compte admin est créé par `npm run seed` avec les valeurs `ADMIN_EMAIL` et
+`ADMIN_PASSWORD` de votre fichier `.env`. Aucun identifiant admin n'est intégré
+au frontend.
 
 ## Variables d'environnement
 
@@ -38,6 +40,8 @@ Copiez `.env.example` en `.env` et renseignez vos clés :
 | Variable | Description |
 |----------|-------------|
 | `PORT` | Port du serveur (défaut: 3001) |
+| `ADMIN_EMAIL` | Email du compte administrateur initial |
+| `ADMIN_PASSWORD` | Mot de passe du compte administrateur initial |
 | `JWT_SECRET` | Clé secrète pour les tokens JWT |
 | `PAYDUNYA_MASTER_KEY` | Clé maître PayDunya |
 | `PAYDUNYA_PRIVATE_KEY` | Clé privée PayDunya |

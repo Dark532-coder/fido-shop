@@ -114,7 +114,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       Votre panier est vide
                     </h3>
                     <p className="text-xs text-slate-500 max-w-xs mx-auto mb-4">
-                      Ajoutez des articles à votre panier pour passer commande via T-Money (Yass) ou Flooz.
+                      Ajoutez des articles à votre panier pour passer commande via Mixx by Yas ou Fozz.
                     </p>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -262,7 +262,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   {/* Secure payment notice */}
                   <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 mb-3">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Paiement chiffré par T-Money (Yass) ou Moov Flooz</span>
+                    <span>Paiement chiffré par Mixx by Yas ou Fozz</span>
                   </div>
 
                   {/* Checkout Button */}

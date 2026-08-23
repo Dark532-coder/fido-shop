@@ -28,6 +28,10 @@ import {
   formatPhoneNumber,
   formatDateFr 
 } from '../utils/security';
+  import { 
+    getMobileMoneyLabel,
+    getMobileMoneyOperator,
+  } from '../utils/security';
 import { 
   saveStoredOrders, 
   getStoredOrders, 
@@ -164,6 +168,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setError(null);
     if (!payerPhone.trim() || !isValidTogoPhone(payerPhone)) {
       setError('Veuillez saisir un numéro Mobile Money valide.');
+      return;
+    }
+    const operator = getMobileMoneyOperator(payerPhone);
+    const expectedOperator = paymentMethod === 'yass' ? 'mixx' : 'flooz';
+    if (operator !== expectedOperator) {
+      setError(`Ce numéro est reconnu comme « ${getMobileMoneyLabel(payerPhone) } ». Sélectionnez le moyen de paiement correspondant.`);
       return;
     }
 
@@ -304,7 +314,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         timeline: [
           {
             status: 'paye',
-            label: `Paiement ${paymentMethod === 'yass' ? 'T-Money (Yass)' : 'Moov Flooz'} validé`,
+            label: `Paiement ${paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'} validé`,
             timestamp,
             note: `Transaction ${operatorRef} approuvée avec authentification forte 2FA.`,
           },
@@ -384,7 +394,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div>
                 <h2 className="text-base font-bold text-white">Caisse Sécurisée</h2>
                 <p className="text-[11px] text-slate-300">
-                  Protocole Mobile Money Yass & Flooz Togo
+                  Protocole Mobile Money Mixx by Yas & Fozz Togo
                 </p>
               </div>
             </div>
@@ -581,7 +591,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 Choisissez votre portefeuille électronique togolais pour initier le paiement ultra-sécurisé avec code PIN / USSD.
               </p>
 
-              {/* T-Money (Yass) Option */}
+              {/* Mixx by Yas Option */}
               <div
                 onClick={() => setPaymentMethod('yass')}
                 className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -593,12 +603,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 font-black text-sm flex items-center justify-center shadow-xs">
-                      YASS
+                      MIXX
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="text-xs font-extrabold text-slate-900">
-                          T-Money (Yass Togo)
+                          Mixx by Yas Togo
                         </h4>
                         <span className="bg-amber-500/20 text-amber-900 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-500/30">
                           *145#
@@ -617,7 +627,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               </div>
 
-              {/* Flooz Option */}
+              {/* Fozz Option */}
               <div
                 onClick={() => setPaymentMethod('flooz')}
                 className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -629,12 +639,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-blue-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
-                      FLOOZ
+                      FOZZ
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="text-xs font-extrabold text-slate-900">
-                          Moov Africa Flooz
+                          Fozz
                         </h4>
                         <span className="bg-blue-500/20 text-blue-900 text-[10px] font-bold px-1.5 py-0.5 rounded border border-blue-500/30">
                           *155#
@@ -656,7 +666,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {/* Phone number input for Mobile Money */}
               <div className="pt-2">
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Numéro de compte {paymentMethod === 'yass' ? 'T-Money (Yass)' : 'Moov Flooz'} à débiter *
+                    Numéro de compte {paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'} à débiter *
                 </label>
                 <div className="relative">
                   <Smartphone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -665,10 +675,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     required
                     value={payerPhone}
                     onChange={(e) => setPayerPhone(e.target.value)}
-                    placeholder="Ex: 90 12 34 56 ou 70 XX XX XX"
+                    placeholder="Ex: 90 12 34 56 ou 97 00 00 00"
                     className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-hidden"
                   />
                 </div>
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  Réseau détecté : <strong>{getMobileMoneyLabel(payerPhone)}</strong> (Mixx by Yas : 90-93 et 70-73, Fozz : 96-99 et 79)
+                </span>
                 <span className="text-[10px] text-slate-500 mt-1 block">
                   Une notification de validation sera envoyée sur ce numéro pour autoriser le prélèvement de {formatFCFA(total)}.
                 </span>
@@ -710,7 +723,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 font-bold text-amber-900">
                     <ShieldCheck className="w-4 h-4 text-amber-700" />
-                    Demande d'autorisation {paymentMethod === 'yass' ? 'T-Money (Yass)' : 'Moov Flooz'}
+                    Demande d'autorisation {paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'}
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-mono text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded-md font-bold">
                     <Clock className="w-3 h-3" />
@@ -814,7 +827,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex justify-between border-b border-slate-200 pb-2">
                   <span className="text-slate-500">Mode de Paiement :</span>
                   <span className="font-semibold text-slate-900">
-                    {createdTransaction.paymentMethod === 'yass' ? 'T-Money (Yass)' : 'Moov Flooz'}
+                    {createdTransaction.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'}
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200 pb-2">

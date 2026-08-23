@@ -44,6 +44,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Close on Escape key
+  React.useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    if (isOpen) window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -75,6 +82,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
 
       if (!found) {
         setError('Aucun compte trouvé avec cet email ou téléphone. Veuillez créer un compte.');
+        setLoading(false);
+        return;
+      }
+
+      if (found.role === 'admin') {
+        setError('Le serveur est indisponible. La connexion administrateur nécessite le serveur sécurisé.');
         setLoading(false);
         return;
       }
@@ -114,7 +127,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
     }
 
     if (!phone.trim() || !isValidTogoPhone(phone)) {
-      setError('Veuillez renseigner un numéro de téléphone valide (ex: 90 12 34 56 ou 70 XX XX XX).');
+      setError('Veuillez renseigner un numéro de téléphone valide (ex: 90 12 34 56 ou 97 00 00 00).');
       return;
     }
 
@@ -191,30 +204,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
     }
   };
 
-  const setDemoLogin = (type: 'admin' | 'client') => {
-    setError(null);
-    if (type === 'admin') {
-      setEmail('admin@boutique.tg');
-      setPassword('admin');
-      setRole('admin');
-      setMode('login');
-    } else {
-      setEmail('client.togo@gmail.com');
-      setPassword('client123');
-      setName('Koffi Mensah');
-      setPhone('91234567');
-      setRole('client');
-      setMode('login');
-    }
-  };
-
-  // Close on Escape key
-  React.useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    if (isOpen) window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [isOpen, onClose]);
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-onyx-950/70 backdrop-blur-xs animate-in fade-in duration-150" onClick={onClose} role="dialog" aria-modal="true" aria-label={mode === 'login' ? 'Connexion' : 'Création de compte'}>
       <div 
@@ -245,7 +234,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
               <p className="text-xs text-slate-300">
                 {step === 'otp'
                   ? 'Validation par code de sécurité mobile'
-                  : 'Accédez à vos commandes et transactions T-Money & Flooz'}
+                  : 'Accédez à vos commandes et transactions Mixx by Yas & Fozz'}
               </p>
             </div>
           </div>
@@ -387,7 +376,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                 {mode === 'register' && (
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Numéro Téléphone (T-Money Yass ou Flooz)
+                      Numéro Téléphone (Mixx by Yas ou Fozz)
                     </label>
                     <div className="relative">
                       <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -396,7 +385,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Ex: 90 12 34 56 ou 70 88 99 00"
+                        placeholder="Ex: 90 12 34 56 ou 97 00 00 00"
                         className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-hidden"
                       />
                     </div>
@@ -441,7 +430,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                         }`}
                       >
                         <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                        T-Money (Yass)
+                        Mixx by Yas
                       </button>
                       <button
                         type="button"
@@ -453,7 +442,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                         }`}
                       >
                         <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                        Moov Flooz
+                        Fozz
                       </button>
                     </div>
                   </div>

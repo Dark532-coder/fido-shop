@@ -26,7 +26,7 @@ import {
   Receipt,
   FileSpreadsheet
 } from 'lucide-react';
-import { Product, Order, Transaction, OrderStatus, PaymentMethod } from '../types';
+import { Product, Order, Transaction, OrderStatus, PaymentMethod, User } from '../types';
 import { CATEGORIES } from '../data/categories';
 import { formatFCFA, formatDateFr, formatPhoneNumber } from '../utils/security';
 import { 
@@ -49,19 +49,24 @@ import { AdminProductsTab } from './admin/AdminProductsTab';
 import { AdminOrdersTab } from './admin/AdminOrdersTab';
 import { AdminTransactionsTab } from './admin/AdminTransactionsTab';
 import { AdminStatsTab } from './admin/AdminStatsTab';
+import { AdminSettingsTab } from './admin/AdminSettingsTab';
 
 interface AdminDashboardProps {
   initialTab?: string;
+  currentUser: User;
+  onAdminUpdated: (user: User) => void;
   onClose: () => void;
   onViewReceipt: (transaction: Transaction, order: Order) => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   initialTab = 'products',
+  currentUser,
+  onAdminUpdated,
   onClose,
   onViewReceipt,
 }) => {
-  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'transactions' | 'stats'>(
+  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'transactions' | 'stats' | 'settings'>(
     (initialTab as any) || 'products'
   );
 
@@ -330,7 +335,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const headers = ['Ref_Operateur', 'Methode', 'Client', 'Numero_Debite', 'Montant_FCFA', 'Date', 'Statut', 'Signature_Hash'];
     const rows = transactions.map((t) => [
       t.operatorRef,
-      t.paymentMethod === 'yass' ? 'T-Money (Yass)' : 'Moov Flooz',
+      t.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz',
       `"${t.userName}"`,
       t.payerPhone,
       t.amount,
@@ -378,7 +383,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold text-white">Tableau de Bord Administrateur</h2>
                 <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-mono border border-amber-500/30">
-                  Fido's Shop - Yass & Flooz
+                  Fido's Shop - Mixx by Yas & Fozz
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -421,6 +426,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </button>
 
           <button
+            id="tab-admin-settings"
+            onClick={() => setActiveTab('settings')}
+            className={`py-3 px-4 text-xs font-bold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
+              activeTab === 'settings'
+                ? 'border-amber-600 text-amber-600 bg-white'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Sécurité du compte</span>
+          </button>
+
+          <button
             id="tab-admin-orders"
             onClick={() => setActiveTab('orders')}
             className={`py-3 px-4 text-xs font-bold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
@@ -443,7 +461,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             }`}
           >
             <Smartphone className="w-4 h-4" />
-            <span>Journal Paiements Yass & Flooz ({transactions.length})</span>
+            <span>Journal Paiements Mixx by Yas & Fozz ({transactions.length})</span>
           </button>
 
           <button
@@ -514,6 +532,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               products={products}
               lowStockCount={lowStockCount}
             />
+          )}
+
+          {activeTab === 'settings' && (
+            <AdminSettingsTab currentUser={currentUser} onAdminUpdated={onAdminUpdated} />
           )}
         </div>
       </div>

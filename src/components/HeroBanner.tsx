@@ -54,7 +54,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onDiscoverClick, onAuthC
             className="text-onyx-400 text-sm sm:text-base max-w-md leading-relaxed mb-8"
           >
             Des articles sélectionnés avec soin, payables instantanément par
-            T-Money (Yass) ou Moov Flooz, avec validation 2FA à chaque commande.
+            Mixx by Yas ou Fozz, avec validation 2FA à chaque commande.
           </motion.p>
 
           <motion.div
@@ -104,7 +104,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onDiscoverClick, onAuthC
             <span className="hidden sm:block w-px h-4 bg-onyx-700" />
             <span className="flex items-center gap-1.5">
               <Smartphone className="w-4 h-4 text-gold-400" />
-              Yass & Flooz
+              Mixx by Yas & Fozz
             </span>
           </motion.div>
         </div>
@@ -129,7 +129,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onDiscoverClick, onAuthC
                 <div className="w-8 h-8 rounded-xl bg-gold-500 text-onyx-950 flex items-center justify-center">
                   <Smartphone className="w-4 h-4" />
                 </div>
-                <span className="text-xs font-bold text-onyx-50">T-Money (Yass)</span>
+                <span className="text-xs font-bold text-onyx-50">Mixx by Yas</span>
               </div>
               <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3" /> Validé

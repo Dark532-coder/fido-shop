@@ -9,37 +9,13 @@ const STORAGE_KEYS = {
   CART: 'ecommerce_tg_cart_v1',
 };
 
-// Default seed admin (so the user can immediately login as Admin and test adding articles)
-const DEFAULT_ADMIN: User = {
-  id: 'usr-admin-01',
-  name: 'Directeur Général (Admin)',
-  email: 'admin@boutique.tg',
-  phone: '90123456',
-  role: 'admin',
-  password: 'admin',
-  addresses: [
-    {
-      id: 'addr-admin-1',
-      label: 'Siège Commercial',
-      fullName: 'Direction Boutique',
-      phone: '+228 90 12 34 56',
-      city: 'Lomé',
-      district: 'Nyékonakpoè',
-      addressDetails: 'Avenue de la Libération, Immeuble Horizon',
-      isDefault: true,
-    },
-  ],
-  twoFactorEnabled: true,
-  createdAt: new Date().toISOString(),
-  preferredPaymentMethod: 'yass',
-};
-
 // 1. PRODUCTS (Starts EMPTY as requested by the user: "n'ajoute aucun article")
 export function getStoredProducts(): Product[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const products: unknown = JSON.parse(raw);
+    return Array.isArray(products) ? products as Product[] : [];
   } catch {
     return [];
   }
@@ -55,18 +31,12 @@ export function getStoredUsers(): User[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.USERS);
     if (!raw) {
-      const initial = [DEFAULT_ADMIN];
-      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(initial));
-      return initial;
+      return [];
     }
     const users: User[] = JSON.parse(raw);
-    if (!users.some((u) => u.role === 'admin')) {
-      users.push(DEFAULT_ADMIN);
-      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-    }
     return users;
   } catch {
-    return [DEFAULT_ADMIN];
+    return [];
   }
 }
 
@@ -100,7 +70,8 @@ export function getStoredOrders(): Order[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.ORDERS);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const orders: unknown = JSON.parse(raw);
+    return Array.isArray(orders) ? orders as Order[] : [];
   } catch {
     return [];
   }
@@ -116,7 +87,8 @@ export function getStoredTransactions(): Transaction[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const transactions: unknown = JSON.parse(raw);
+    return Array.isArray(transactions) ? transactions as Transaction[] : [];
   } catch {
     return [];
   }
@@ -132,7 +104,8 @@ export function getStoredCart(): { productId: string; quantity: number }[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CART);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const cart: unknown = JSON.parse(raw);
+    return Array.isArray(cart) ? cart as { productId: string; quantity: number }[] : [];
   } catch {
     return [];
   }

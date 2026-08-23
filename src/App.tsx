@@ -29,7 +29,10 @@ import { Footer } from './components/Footer';
 export default function App() {
   const [products, setProducts] = useState<Product[]>(getStoredProducts());
   const [isProductsLoading, setIsProductsLoading] = useState(false);
-  const [currentUser, setCurrentUserState] = useState<User | null>(getCurrentUser());
+  const [currentUser, setCurrentUserState] = useState<User | null>(() => {
+    const storedUser = getCurrentUser();
+    return storedUser?.role === 'admin' && !getAuthToken() ? null : storedUser;
+  });
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,6 +47,7 @@ export default function App() {
   const [clientDashboardTab, setClientDashboardTab] = useState('orders');
   const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
   const [adminDashboardTab, setAdminDashboardTab] = useState('products');
+  const [isLightTheme, setIsLightTheme] = useState(() => localStorage.getItem('fido_theme') === 'light');
 
   const [receiptModalOpen, setReceiptModalOpen] = useState(false);
   const [selectedReceiptTrx, setSelectedReceiptTrx] = useState<Transaction | null>(null);
@@ -161,6 +165,23 @@ export default function App() {
     setCurrentUserState(null);
   };
 
+  const openAdminDashboard = (tab = 'products') => {
+    if (currentUser?.role !== 'admin' || !getAuthToken()) {
+      setIsAuthOpen(true);
+      return;
+    }
+    setAdminDashboardTab(tab);
+    setIsAdminDashboardOpen(true);
+  };
+
+  const toggleTheme = () => {
+    setIsLightTheme((current) => {
+      const next = !current;
+      localStorage.setItem('fido_theme', next ? 'light' : 'dark');
+      return next;
+    });
+  };
+
   const handleAddReview = (productId: string, reviewData: Omit<ProductReview, 'id' | 'createdAt'>) => {
     const newReview: ProductReview = {
       ...reviewData,
@@ -231,7 +252,7 @@ export default function App() {
   const totalCartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-onyx-950 flex flex-col text-onyx-50 font-sans antialiased selection:bg-gold-500 selection:text-onyx-950">
+    <div className={`min-h-screen bg-onyx-950 flex flex-col text-onyx-50 font-sans antialiased selection:bg-gold-500 selection:text-onyx-950 ${isLightTheme ? 'theme-light' : ''}`}>
       
       <Navbar
         currentUser={currentUser}
@@ -242,18 +263,16 @@ export default function App() {
           setClientDashboardTab(tab || 'orders');
           setIsClientDashboardOpen(true);
         }}
-        onOpenAdminDashboard={(tab) => {
-          setAdminDashboardTab(tab || 'products');
-          setIsAdminDashboardOpen(true);
-        }}
+        onOpenAdminDashboard={openAdminDashboard}
+        isLightTheme={isLightTheme}
+        onToggleTheme={toggleTheme}
         onLogout={handleLogout}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
         onNewProductClick={() => {
-          setAdminDashboardTab('products');
-          setIsAdminDashboardOpen(true);
+          openAdminDashboard('products');
         }}
       />
 
@@ -322,7 +341,7 @@ export default function App() {
                   : CATEGORIES.find((c) => c.id === selectedCategory)?.name || 'Articles'}
               </h1>
               <p className="text-xs text-onyx-500 mt-0.5">
-                Paiement instantané par T-Money (Yass) & Moov Flooz avec validation SMS
+                Paiement instantané par Mixx by Yas & Fozz avec validation SMS
               </p>
             </div>
           </div>
@@ -352,8 +371,7 @@ export default function App() {
             isAdmin={currentUser?.role === 'admin'}
             hasUser={!!currentUser}
             onAddProduct={() => {
-              setAdminDashboardTab('products');
-              setIsAdminDashboardOpen(true);
+              openAdminDashboard('products');
             }}
             onOpenAuth={() => setIsAuthOpen(true)}
           />
@@ -400,7 +418,7 @@ export default function App() {
       <Footer
         onOpenAdminAuth={() => {
           if (currentUser?.role === 'admin') {
-            setIsAdminDashboardOpen(true);
+            openAdminDashboard('products');
           } else {
             setIsAuthOpen(true);
           }
@@ -464,6 +482,11 @@ export default function App() {
       {isAdminDashboardOpen && (
         <AdminDashboard
           initialTab={adminDashboardTab}
+          currentUser={currentUser!}
+          onAdminUpdated={(user) => {
+            setCurrentUserState(user);
+            setCurrentUser(user);
+          }}
           onClose={() => {
             setIsAdminDashboardOpen(false);
             setProducts(getStoredProducts());

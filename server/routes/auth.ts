@@ -1,8 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { v4 as uuidv4 } from 'crypto';
 import db from '../db.js';
 import { hashPassword, verifyPassword } from '../utils/hash.js';
-import { generateToken } from '../middleware/auth.js';
+import { generateToken, requireAuth, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -104,6 +103,52 @@ router.get('/me', async (req: Request, res: Response) => {
   } catch (err: any) {
     console.error('Get profile error:', err);
     res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
+/**
+ * PUT /api/auth/admin-credentials — Update the authenticated admin credentials
+ */
+router.put('/admin-credentials', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { currentPassword, email, newPassword } = req.body;
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+
+    if (!currentPassword || !normalizedEmail) {
+      res.status(400).json({ error: 'Le mot de passe actuel et l’email sont requis.' });
+      return;
+    }
+    if (!normalizedEmail.includes('@')) {
+      res.status(400).json({ error: 'Veuillez renseigner une adresse email valide.' });
+      return;
+    }
+    if (newPassword && newPassword.length < 8) {
+      res.status(400).json({ error: 'Le nouveau mot de passe doit contenir au moins 8 caractères.' });
+      return;
+    }
+
+    const admin = db.prepare('SELECT * FROM users WHERE id = ? AND role = \'admin\'').get(req.user!.userId) as any;
+    if (!admin || !(await verifyPassword(currentPassword, admin.password_hash))) {
+      res.status(401).json({ error: 'Le mot de passe actuel est incorrect.' });
+      return;
+    }
+
+    const existing = db.prepare('SELECT id FROM users WHERE email = ? AND id != ?').get(normalizedEmail, admin.id);
+    if (existing) {
+      res.status(409).json({ error: 'Cette adresse email est déjà utilisée.' });
+      return;
+    }
+
+    const passwordHash = newPassword ? await hashPassword(newPassword) : admin.password_hash;
+    db.prepare('UPDATE users SET email = ?, password_hash = ?, updated_at = datetime(\'now\') WHERE id = ?')
+      .run(normalizedEmail, passwordHash, admin.id);
+
+    const user = db.prepare('SELECT id, name, email, phone, role, avatar, created_at FROM users WHERE id = ?').get(admin.id) as any;
+    const token = generateToken({ userId: user.id, email: user.email, role: user.role });
+    res.json({ user, token });
+  } catch (err: any) {
+    console.error('Admin credentials update error:', err);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour des identifiants.' });
   }
 });
 

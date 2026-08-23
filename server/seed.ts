@@ -2,21 +2,28 @@
  * Seed script — Crée un compte administrateur par défaut
  * Usage: npx tsx server/seed.ts
  */
+import 'dotenv/config';
 import db from './db.js';
 import { hashPassword } from './utils/hash.js';
 
 async function seed() {
   console.log('🌱 Seed Fido\'s Shop...');
 
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminEmail || !adminPassword) {
+    throw new Error('ADMIN_EMAIL et ADMIN_PASSWORD doivent être définis avant le seed.');
+  }
+
   // Create admin user
-  const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get('admin@fido.tg');
+  const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
   if (!existingAdmin) {
-    const hash = await hashPassword('Admin2026!');
+    const hash = await hashPassword(adminPassword);
     db.prepare(`
       INSERT INTO users (id, name, email, phone, password_hash, role)
       VALUES (?, ?, ?, ?, ?, 'admin')
-    `).run('user-admin-001', 'Administrateur Fido', 'admin@fido.tg', '90000000', hash);
-    console.log('  ✅ Admin créé : admin@fido.tg / Admin2026!');
+    `).run('user-admin-001', 'Administrateur Fido', adminEmail, '90000000', hash);
+    console.log(`  ✅ Admin créé : ${adminEmail}`);
   } else {
     console.log('  ⏭️  Admin existe déjà.');
   }

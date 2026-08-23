@@ -38,7 +38,7 @@ export const ClientOrdersTab: React.FC<ClientOrdersTabProps> = ({
           Suivi de vos commandes
         </h3>
         <span className="text-xs text-slate-500">
-          Paiements sécurisés par Yass & Flooz
+          Paiements sécurisés par Mixx by Yas & Fozz
         </span>
       </div>
 
@@ -47,7 +47,7 @@ export const ClientOrdersTab: React.FC<ClientOrdersTabProps> = ({
           <Package className="w-12 h-12 text-slate-300 mx-auto mb-2" />
           <h4 className="text-xs font-bold text-slate-800">Aucune commande enregistrée</h4>
           <p className="text-xs text-slate-500 mt-1">
-            Vos commandes payées par T-Money ou Flooz apparaîtront ici avec leur suivi en direct.
+            Vos commandes payées par Mixx by Yas ou Fozz apparaîtront ici avec leur suivi en direct.
           </p>
         </div>
       ) : (
@@ -118,7 +118,7 @@ export const ClientOrdersTab: React.FC<ClientOrdersTabProps> = ({
                   <div className="flex items-center gap-2 font-mono text-[11px]">
                     <span className="text-slate-400">Paiement :</span>
                     <span className="font-bold text-slate-800">
-                      {order.paymentMethod === 'yass' ? 'T-Money (Yass)' : 'Moov Flooz'}
+                      {order.paymentMethod === 'yass' ? 'Mixx by Yas' : 'Fozz'}
                     </span>
                     <span className="text-slate-400">({order.operatorRef})</span>
                   </div>

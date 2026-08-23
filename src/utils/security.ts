@@ -44,6 +44,24 @@ export function isValidTogoPhone(phone: string): boolean {
   return cleaned.length >= 8 && cleaned.length <= 15 && /^[0-9]+$/.test(cleaned);
 }
 
+export type MobileMoneyOperator = 'mixx' | 'flooz' | 'unknown';
+
+export function getMobileMoneyOperator(phone: string): MobileMoneyOperator {
+  const cleaned = phone.replace(/[\s\-\+\(\)]/g, '');
+  const local = cleaned.startsWith('228') && cleaned.length === 11 ? cleaned.slice(3) : cleaned;
+  if (!/^\d{8}$/.test(local)) return 'unknown';
+  if (/^(90|91|92|93|70|71|72|73)\d{6}$/.test(local)) return 'mixx';
+  if (/^(96|97|98|99|79)\d{6}$/.test(local)) return 'flooz';
+  return 'unknown';
+}
+
+export function getMobileMoneyLabel(phone: string): string {
+  const operator = getMobileMoneyOperator(phone);
+  if (operator === 'mixx') return 'Mixx by Yas';
+  if (operator === 'flooz') return 'Fozz';
+  return 'Réseau non reconnu';
+}
+
 export function formatPhoneNumber(phone: string): string {
   const cleaned = phone.replace(/[\s\-\+\(\)]/g, '');
   if (cleaned.length === 8) {
