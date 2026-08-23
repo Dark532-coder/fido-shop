@@ -66,10 +66,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [fullName, setFullName] = useState(currentUser?.name || '');
   const [phone, setPhone] = useState(currentUser?.phone || '');
   const [email, setEmail] = useState(currentUser?.email || '');
-  const [city, setCity] = useState(currentUser?.addresses[0]?.city || 'Lomé');
-  const [district, setDistrict] = useState(currentUser?.addresses[0]?.district || 'Agoè-Nyivé');
+  const [city, setCity] = useState(currentUser?.addresses?.[0]?.city || 'Lomé');
+  const [district, setDistrict] = useState(currentUser?.addresses?.[0]?.district || 'Agoè-Nyivé');
   const [addressDetails, setAddressDetails] = useState(
-    currentUser?.addresses[0]?.addressDetails || 'Près du carrefour principal'
+    currentUser?.addresses?.[0]?.addressDetails || 'Près du carrefour principal'
   );
   const [deliveryNotes, setDeliveryNotes] = useState('');
 
