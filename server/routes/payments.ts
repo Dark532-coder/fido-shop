@@ -45,51 +45,64 @@ router.post('/init', requireAuth, async (req: Request, res: Response) => {
     // If PayDunya is configured, use real payment
     if (isPayDunyaConfigured) {
       try {
-        const paydunya = await import('paydunya');
-
-        const setup = new paydunya.Setup({
-          masterKey: PAYDUNYA_CONFIG.masterKey,
-          privateKey: PAYDUNYA_CONFIG.privateKey,
-          publicKey: PAYDUNYA_CONFIG.publicKey,
-          token: PAYDUNYA_CONFIG.token,
-          mode: PAYDUNYA_CONFIG.mode as any,
-        });
-
-        const store = new paydunya.Store({ name: "Fido's Shop" });
-
-        const invoice = new paydunya.CheckoutInvoice(setup, store);
-
-        // Add items
-        for (const item of items) {
-          invoice.addItem(item.product_name, item.quantity, item.price, item.price * item.quantity);
-        }
-
-        if (order.delivery_fee > 0) {
-          invoice.addItem('Frais de livraison', 1, order.delivery_fee, order.delivery_fee);
-        }
-
-        invoice.totalAmount = order.total;
-        invoice.description = `Commande ${order.order_number} - Fido's Shop`;
-
         // Set callback URLs
         const baseUrl = process.env.APP_URL || 'http://localhost:3000';
-        invoice.callbackUrl = `${baseUrl}/api/payments/webhook`;
-        invoice.returnUrl = `${baseUrl}?payment=success&order=${order.order_number}`;
-        invoice.cancelUrl = `${baseUrl}?payment=cancelled&order=${order.order_number}`;
+        const invoiceItems: Record<string, { name: string; quantity: number; unit_price: number; total_price: number }> = {};
+        items.forEach((item, index) => {
+          invoiceItems[`item_${index + 1}`] = {
+            name: item.product_name,
+            quantity: item.quantity,
+            unit_price: item.price,
+            total_price: item.price * item.quantity,
+          };
+        });
+        if (order.delivery_fee > 0) {
+          invoiceItems[`item_${Object.keys(invoiceItems).length + 1}`] = {
+            name: 'Frais de livraison',
+            quantity: 1,
+            unit_price: order.delivery_fee,
+            total_price: order.delivery_fee,
+          };
+        }
 
-        const created = await invoice.create();
+        const paydunyaBaseUrl = PAYDUNYA_CONFIG.mode.toLowerCase() === 'test'
+          ? 'https://app.paydunya.com/sandbox-api/v1'
+          : 'https://app.paydunya.com/api/v1';
+        const paydunyaResponse = await fetch(`${paydunyaBaseUrl}/checkout-invoice/create`, {
+          method: 'POST',
+          headers: {
+            'PAYDUNYA-MASTER-KEY': PAYDUNYA_CONFIG.masterKey,
+            'PAYDUNYA-PRIVATE-KEY': PAYDUNYA_CONFIG.privateKey,
+            'PAYDUNYA-TOKEN': PAYDUNYA_CONFIG.token,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            invoice: {
+              total_amount: order.total,
+              description: `Commande ${order.order_number} - Fido's Shop`,
+              items: invoiceItems,
+            },
+            store: { name: "Fido's Shop" },
+            actions: {
+              callback_url: `${baseUrl}/api/payments/webhook`,
+              return_url: `${baseUrl}?payment=success&order=${order.order_number}`,
+              cancel_url: `${baseUrl}?payment=cancelled&order=${order.order_number}`,
+            },
+          }),
+        });
+        const paydunyaBody = await paydunyaResponse.json() as { response_code?: string; response_text?: string; token?: string };
 
-        if (created) {
+        if (paydunyaResponse.ok && paydunyaBody.response_code === '00' && paydunyaBody.token && paydunyaBody.response_text) {
           // Save PayDunya token
-          db.prepare('UPDATE orders SET paydunya_token = ? WHERE id = ?').run(invoice.token, orderId);
+          db.prepare('UPDATE orders SET paydunya_token = ? WHERE id = ?').run(paydunyaBody.token, orderId);
 
           res.json({
-            checkoutUrl: invoice.url,
-            token: invoice.token,
+            checkoutUrl: paydunyaBody.response_text,
+            token: paydunyaBody.token,
             mode: 'paydunya',
           });
         } else {
-          res.status(500).json({ error: 'Impossible de créer la facture PayDunya.' });
+          res.status(502).json({ error: paydunyaBody.response_text || 'Impossible de créer la facture PayDunya.' });
         }
       } catch (payErr: any) {
         console.error('PayDunya error:', payErr);
