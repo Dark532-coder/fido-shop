@@ -10,7 +10,7 @@
     "server:dev": "tsx watch server/index.ts",
     "server": "tsx server/index.ts",
     "seed": "tsx server/seed.ts",
-    "start": "npm run build && npm run server",
+    "start": "npm run seed && npm run server",
     "clean": "rm -rf dist data/fido_shop.db",
     "lint": "tsc --noEmit"
   },

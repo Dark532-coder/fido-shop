@@ -73,6 +73,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
       }
       setLoading(false);
     } catch (err: any) {
+      const isApiUnavailable = err instanceof TypeError || err?.message === 'Erreur réseau.';
+      if (!isApiUnavailable) {
+        setError(err?.message || 'Email ou mot de passe incorrect.');
+        setLoading(false);
+        return;
+      }
+
       const users = getStoredUsers();
       const trimmedEmail = email.trim().toLowerCase();
       
