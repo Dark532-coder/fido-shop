@@ -94,6 +94,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [imageUrlInput, setImageUrlInput] = useState('');
   const [formTags, setFormTags] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+  const [isSavingProduct, setIsSavingProduct] = useState(false);
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
   const refreshData = async () => {
@@ -223,6 +224,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       tags: tagsArray,
     };
 
+    setIsSavingProduct(true);
     try {
       if (editingProductId) {
         await apiUpdateProduct(editingProductId, productData);
@@ -233,38 +235,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
       refreshData();
     } catch (err) {
-      console.warn('API error, falling back to local storage', err);
-      // Fallback
-      const currentProds = getStoredProducts();
-      const timestamp = new Date().toISOString();
-
-      if (editingProductId) {
-        const updated = currentProds.map((p) => {
-          if (p.id === editingProductId) {
-            return { ...p, ...productData, updatedAt: timestamp };
-          }
-          return p;
-        });
-        saveStoredProducts(updated);
-        setProducts(updated);
-        showToast('Article modifié avec succès (local) !');
-      } else {
-        const newProduct: Product = {
-          id: `prod-${Date.now()}`,
-          ...productData,
-          featuredImageIndex: 0,
-          isActive: true,
-          reviews: [],
-          averageRating: 5.0,
-          reviewsCount: 0,
-          createdAt: timestamp,
-          updatedAt: timestamp,
-        };
-        currentProds.unshift(newProduct);
-        saveStoredProducts(currentProds);
-        setProducts(currentProds);
-        showToast('Nouvel article ajouté au catalogue avec succès (local) !');
-      }
+      console.warn('API error while saving product', err);
+      const message = err instanceof Error ? err.message : 'Erreur lors de la publication de l’article.';
+      setFormError(message);
+      setIsSavingProduct(false);
+      return;
+    } finally {
+      setIsSavingProduct(false);
     }
 
     setIsProductFormOpen(false);
@@ -772,10 +749,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5"
+                  disabled={isSavingProduct}
+                  className="px-6 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-60 disabled:cursor-wait text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5"
                 >
                   <Save className="w-4 h-4" />
-                  <span>{editingProductId ? 'Enregistrer les modifications' : 'Publier l\'article'}</span>
+                  <span>{isSavingProduct ? 'Publication...' : editingProductId ? 'Enregistrer les modifications' : 'Publier l\'article'}</span>
                 </button>
               </div>
             </form>
