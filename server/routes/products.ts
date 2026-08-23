@@ -43,6 +43,9 @@ router.get('/', (req: Request, res: Response) => {
       return {
         ...p,
         images: JSON.parse(p.images || '[]'),
+        isActive: true,
+        featuredImageIndex: 0,
+        tags: [],
         isFeatured: p.is_featured === 1,
         originalPrice: p.original_price,
         reviews,
@@ -72,6 +75,9 @@ router.get('/:id', (req: Request, res: Response) => {
     res.json({
       ...product,
       images: JSON.parse(product.images || '[]'),
+      isActive: true,
+      featuredImageIndex: 0,
+      tags: [],
       isFeatured: product.is_featured === 1,
       originalPrice: product.original_price,
       reviews,
@@ -117,6 +123,9 @@ router.post('/', requireAuth, requireAdmin, (req: Request, res: Response) => {
     res.status(201).json({
       ...product,
       images: JSON.parse(product.images || '[]'),
+      isActive: true,
+      featuredImageIndex: 0,
+      tags: [],
       isFeatured: product.is_featured === 1,
       originalPrice: product.original_price,
       reviews: [],
@@ -172,6 +181,9 @@ router.put('/:id', requireAuth, requireAdmin, (req: Request, res: Response) => {
     res.json({
       ...product,
       images: JSON.parse(product.images || '[]'),
+      isActive: true,
+      featuredImageIndex: 0,
+      tags: [],
       isFeatured: product.is_featured === 1,
       originalPrice: product.original_price,
       reviews,
