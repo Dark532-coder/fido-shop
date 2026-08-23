@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import db from '../db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fido-shop-dev-secret-change-in-production';
 const JWT_EXPIRES_IN = '7d';
@@ -40,6 +41,11 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
   try {
     const token = authHeader.split(' ')[1];
     req.user = verifyToken(token);
+    const user = db.prepare('SELECT id, role FROM users WHERE id = ?').get(req.user.userId) as { id: string; role: 'client' | 'admin' } | undefined;
+    if (!user || user.role !== req.user.role) {
+      res.status(401).json({ error: 'Session expirée. Veuillez vous reconnecter.' });
+      return;
+    }
     next();
   } catch {
     res.status(401).json({ error: 'Token invalide ou expiré.' });

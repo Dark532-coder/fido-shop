@@ -76,7 +76,9 @@ export default function App() {
           setCurrentUserState(user);
           setCurrentUser(user);
         } catch (err) {
-          setCurrentUserState(getCurrentUser());
+          apiLogout();
+          setCurrentUser(null);
+          setCurrentUserState(null);
         }
       }
     };
