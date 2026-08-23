@@ -15,7 +15,9 @@ const PAYDUNYA_CONFIG = {
   mode: process.env.PAYDUNYA_MODE || 'test',
 };
 
-const isPayDunyaConfigured = Boolean(PAYDUNYA_CONFIG.masterKey && PAYDUNYA_CONFIG.privateKey);
+const isPayDunyaConfigured = Boolean(
+  PAYDUNYA_CONFIG.masterKey && PAYDUNYA_CONFIG.privateKey && PAYDUNYA_CONFIG.token
+);
 
 /**
  * POST /api/payments/init — Initialize a payment for an order
@@ -109,6 +111,11 @@ router.post('/init', requireAuth, async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Erreur PayDunya: ' + payErr.message });
       }
     } else {
+      if (process.env.NODE_ENV === 'production') {
+        res.status(503).json({ error: 'Paiement indisponible : les clés PayDunya ne sont pas configurées.' });
+        return;
+      }
+
       // Simulation mode (no PayDunya keys configured)
       const transactionId = `trx-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const transactionRef = `TRX-${Date.now().toString().slice(-6)}`;

@@ -86,6 +86,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   // Completed Order & Transaction state
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
   const [createdTransaction, setCreatedTransaction] = useState<Transaction | null>(null);
+  const [pendingServerOrder, setPendingServerOrder] = useState<any | null>(null);
+  const [pendingPaymentInfo, setPendingPaymentInfo] = useState<any | null>(null);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -125,6 +127,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       setUssdTimer(90);
       setCreatedOrder(null);
       setCreatedTransaction(null);
+      setPendingServerOrder(null);
+      setPendingPaymentInfo(null);
       setError(null);
     }
   }, [isOpen]);
@@ -159,7 +163,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setCurrentStep(2);
   };
 
-  const handleInitiateMobileMoney = () => {
+  const buildOrderData = () => ({
+    items: items.map((i) => ({ productId: i.product.id, quantity: i.quantity })),
+    shippingAddress: {
+      fullName: fullName.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      city,
+      district,
+      addressDetails,
+      notes: deliveryNotes,
+    },
+    paymentMethod,
+  });
+
+  const handleInitiateMobileMoney = async () => {
     setError(null);
     if (!payerPhone.trim() || !isValidTogoPhone(payerPhone)) {
       setError('Veuillez saisir un numéro Mobile Money valide.');
@@ -175,6 +193,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setIsProcessingPush(true);
     setUssdTimer(90);
 
+    try {
+      const serverOrder = await apiCreateOrder(buildOrderData());
+      const paymentInfo = await apiInitPayment(serverOrder.id);
+
+      if (paymentInfo.mode === 'paydunya' && paymentInfo.checkoutUrl) {
+        window.location.href = paymentInfo.checkoutUrl;
+        return;
+      }
+
+      setPendingServerOrder(serverOrder);
+      setPendingPaymentInfo(paymentInfo);
+    } catch (err: any) {
+      setError(err?.message || 'Impossible d’initialiser le paiement.');
+      setIsProcessingPush(false);
+      return;
+    }
+
     setTimeout(() => {
       setIsProcessingPush(false);
       setCurrentStep(3);
@@ -188,26 +223,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setIsPaymentConfirmed(true);
 
     try {
-      // API call to create order
-      const apiItems = items.map((i) => ({ productId: i.product.id, quantity: i.quantity }));
-      const orderData = {
-        items: apiItems,
-        shippingAddress: {
-          fullName: fullName.trim(),
-          phone: phone.trim(),
-          email: email.trim(),
-          city,
-          district,
-          addressDetails,
-          notes: deliveryNotes,
-        },
-        paymentMethod,
-      };
-
-      const serverOrder = await apiCreateOrder(orderData);
+      const serverOrder = pendingServerOrder || await apiCreateOrder(buildOrderData());
       
       // Initialize payment
-      const paymentInfo = await apiInitPayment(serverOrder.id);
+      const paymentInfo = pendingPaymentInfo || await apiInitPayment(serverOrder.id);
       
       if (paymentInfo.mode === 'paydunya' && paymentInfo.checkoutUrl) {
         window.location.href = paymentInfo.checkoutUrl;
@@ -727,7 +746,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <div className="text-white font-bold">
                     Débiter {formatFCFA(total)} pour Fido's Shop ?
                   </div>
-                  <div className="text-emerald-400">Mode simulation : confirmez ci-dessous pour continuer.</div>
+                  <div className="text-emerald-400">Après validation sur votre téléphone, confirmez ci-dessous.</div>
                 </div>
               </div>
 
